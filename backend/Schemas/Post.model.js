@@ -1,0 +1,23 @@
+import mongoose from "mongoose";
+
+const PostSchema = new mongoose.Schema({
+    createdBy:{
+        type : String,
+        ref : "User"
+    },
+    content : {
+        type: String ,
+        required : true
+    },
+    tillTime : {
+        type : String ,
+        required : true
+    },
+    conditions : {
+        type : String
+    }
+
+    
+})
+
+export const Post = mongoose.model ("Post" , PostSchema)

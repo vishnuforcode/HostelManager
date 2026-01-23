@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const User = require('./UserSchema')
+const User = require('./Schemas/UserSchema')
 const dbURI = process.env.dbURI
 
 const db = async ()=> {
