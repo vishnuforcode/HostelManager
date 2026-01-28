@@ -8,6 +8,8 @@ const auth = (req,res ,next) =>{
         const decoded = jwt.verify(token , process.env.SECRET_KEY) 
 
         req.user = decoded  // we can add new key to "req" object
+        console.log(decoded);
+        
 
         next()
      }catch(err){

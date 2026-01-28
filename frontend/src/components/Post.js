@@ -5,46 +5,55 @@ function Post({ data }) {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(0);
-
   const [timeLeft, setTimeLeft] = useState('');
-
   const stars = [1, 2, 3, 4, 5];
 
-useEffect(() => {
-  const targetTime = new Date(data.tillTime).getTime();
+  useEffect(() => {
+    const targetTime = new Date(data.tillTime).getTime();
 
-  const updateTimer = () => {
-    const now = Date.now();
-    const diff = targetTime - now;
+    const updateTimer = () => {
+      const now = Date.now();
+      const diff = targetTime - now;
 
-    if (diff <= 0) {
-      setTimeLeft('00:00:00');
-      setSecondsLeft(0);
-    } else {
-      const totalSeconds = Math.floor(diff / 1000);
-      setSecondsLeft(totalSeconds);
+      if (diff <= 0) {
+        setTimeLeft('00:00:00');
+        setSecondsLeft(0);
+      } else {
+        const totalSeconds = Math.floor(diff / 1000);
+        setSecondsLeft(totalSeconds);
 
-      const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
-      const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
-      const seconds = String(totalSeconds % 60).padStart(2, '0');
+        const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        const seconds = String(totalSeconds % 60).padStart(2, '0');
 
-      setTimeLeft(`${hours}:${minutes}:${seconds}`);
-    }
-  };
+        setTimeLeft(`${hours}:${minutes}:${seconds}`);
+      }
+    };
 
-  updateTimer();
-  const interval = setInterval(updateTimer, 1000);
-  return () => clearInterval(interval);
-}, [data.tillTime]);
-
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [data.tillTime]);
 
   return (
     <div className="col-lg-3 col-md-4 col-sm-6 d-flex">
       <div className="card w-100 m-2 card-hover">
         <div className="card-body d-flex flex-column">
-          <h5 className="card-title fw-semibold mb-1 text-white">
-            {data.createdBy.name}
-          </h5>
+
+          
+          {/* Header */}
+
+<h5 className=" me-2 card-title fw-semibold mb-1 text-white d-flex align-items-center">
+  {data.createdBy.name} 
+  <span className="h6 mb-0 ms-2 d-flex align-items-center" >
+    : {data.createdBy.role}
+    {data.createdBy.role === "warden" && (
+      <span className="mt-1 warden-dot"></span>
+    )}
+  </span>
+</h5>
+
+
 
           <h6 className="card-subtitle mb-2 text-primary">
             {data.content}
@@ -56,33 +65,19 @@ useEffect(() => {
             </p>
           )}
 
- <style>{`
-  .pulse {
-    animation: pulse 1.2s infinite;
-  }
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(255,75,43,0.6); }
-    70% { box-shadow: 0 0 0 10px rgba(255,75,43,0); }
-    100% { box-shadow: 0 0 0 0 rgba(255,75,43,0); }
-  }
-`}</style>
-
-<span
-  className={`badge px-3 py-2 mb-3 align-self-start ${
-    secondsLeft <= 30 ? 'pulse' : ''
-  }`}
-  style={{
-    background: secondsLeft <= 30
-      ? 'linear-gradient(135deg, #ff416c, #ff4b2b)'
-      : 'linear-gradient(135deg, #00b09b, #96c93d)',
-    color: '#fff',
-    borderRadius: '999px'
-  }}
->
-  ⏳ Returning in: <strong>{timeLeft}</strong>
-</span>
-
-
+          <span
+            className={`badge px-3 py-2 mb-3 align-self-start ${secondsLeft <= 30 ? 'pulse' : ''}`}
+            style={{
+              background: secondsLeft <= 30
+                ? 'linear-gradient(135deg, #ff416c, #ff4b2b)'
+                : 'linear-gradient(135deg, #00b09b, #96c93d)',
+              color: '#fff',
+              borderRadius: '999px'
+            }}
+          >
+            ⏳ Post Alive : <strong>{timeLeft}</strong>
+          </span>
+          <p style={{color: data.status=== "Done" ? "green" : "gray"}}>{data.status}</p>
 
           <div className="mt-auto d-flex gap-2">
             <Link
@@ -105,9 +100,12 @@ useEffect(() => {
                 </span>
               ))}
             </button>
+
+            
           </div>
         </div>
 
+        {/* Styles */}
         <style>{`
           .card-hover {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -137,6 +135,28 @@ useEffect(() => {
           }
           .card-hover h6, .card-hover p, .card-hover .badge {
             color: #ccc;
+          }
+          .pulse {
+            animation: pulse 1.2s infinite;
+          }
+          @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255,75,43,0.6); }
+            70% { box-shadow: 0 0 0 10px rgba(255,75,43,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,75,43,0); }
+          }
+          /* Pulsing red dot for warden */
+          .warden-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #ff4b4b;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            animation: pulse-dot 1.2s infinite;
+          }
+          @keyframes pulse-dot {
+            0% { box-shadow: 0 0 0 0 rgba(255,75,43,0.6); }
+            70% { box-shadow: 0 0 0 6px rgba(255,75,43,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,75,43,0); }
           }
         `}</style>
       </div>

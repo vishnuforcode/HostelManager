@@ -15,6 +15,11 @@ const PostSchema = new mongoose.Schema({
     },
     conditions : {
         type : String
+    },
+    status:{
+        type :String ,
+        enum : ["Done", "Pending", "Closed"],
+        default : "Pending"
     }
 
     

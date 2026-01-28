@@ -11,7 +11,8 @@ function Register() {
   const [formData, setFormData] = useState({
     name: "",
     hostelName: "",
-    gmail: ""
+    gmail: "",
+    role: ""
   })
 
   const handleChange = (e) => {
@@ -19,12 +20,16 @@ function Register() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
+  console.log();
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      await axios.post('http://10.211.231.104:8000/register', formData)
+      await axios.post('http://localhost:8000/register', formData)
       // Navigate to login after registration
       navigate('/login')
+      console.log(formData)
     } catch (err) {
       console.log({ err })
     }
@@ -32,7 +37,7 @@ function Register() {
 
   return (
     <>
-      {/* Main Register Form */}
+      
       <div
         className="container-fluid vh-100 d-flex align-items-center justify-content-center"
         style={{
@@ -84,6 +89,22 @@ function Register() {
                   placeholder="example@gmail.com"
                   required
                 />
+              </div>
+
+               <div className="mb-3">
+                <label className="form-label small text-muted">Role</label>
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="form-control shadow-sm"
+                  placeholder="role"
+                  required
+                >
+                  <option value="">select role-</option>
+                  <option value="student">Student</option>
+                  <option value="warden">Warden</option>
+                </select>
               </div>
 
               <button type="submit" className="btn btn-primary w-100 py-2 fw-bold shadow-sm">

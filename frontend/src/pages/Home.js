@@ -7,7 +7,9 @@ import { useSelector } from 'react-redux'
 function Home() {
   const navigate = useNavigate()
   const [Posts, setPosts] = useState([])
-  const isAuth = useSelector((state) => state.auth.currentAuth)
+  console.log(Posts)
+  // const isAuth = useSelector((state) => state.auth.currentAuth)
+  const isAuth = JSON.parse(localStorage.getItem("currentAuth"))
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,8 +18,12 @@ function Home() {
         setPosts(data.data)
       } catch (err) {
         if (err.response && err.response.status === 401) {
-          navigate('/login')
-          alert("Please login first")
+
+          setTimeout(() => {
+            navigate('/login')
+          }, 1500);
+          
+          
         } else {
           console.error(err.message)
         }
@@ -43,7 +49,7 @@ function Home() {
          style={{ background: 'linear-gradient(135deg, #1e1f29 0%, #2c2d3a 100%)', overflowY: 'auto' }}>
 
       <div className="container">
-        <h2 className="text-center mb-5 fw-bold text-white">They Are in Market...</h2>
+        <h2 className="text-center mb-5 fw-bold text-white">Hostelers Problems...</h2>
 
         {Posts.length === 0 ? (
           <div className="text-center mt-5 text-white">
@@ -97,7 +103,9 @@ function Home() {
         ) : (
           <div className="row g-4 justify-content-center">
             {Posts.map((post) => (
+              
               <Post key={post._id} data={post} />
+              
             ))}
           </div>
         )}

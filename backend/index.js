@@ -10,6 +10,7 @@ const { default: auth } = require('./Middleware/Auth')
 
 const cookieParser = require('cookie-parser')
 const { Request } = require('./Schemas/request.model')
+const { default: RoleAuth } = require('./Middleware/RoleAuth')
 
 
 const app = express()
@@ -18,7 +19,7 @@ app.use(express.json())
 
 app.use(cookieParser())
 app.use(cors({
-    origin:['http://localhost:3000' ,"http://10.211.231.104:3000" ] ,
+    origin:['http://localhost:3000' ,"http://10.211.231.104:3000" ,"http://localhost:3001" ] ,
     credentials : true
 }))
 
@@ -40,30 +41,40 @@ app.get('/home' , auth, async (req,res)=>{
 
     
     const data = await PostSchema.Post.find()
-    .populate("createdBy" , "name") 
+    .populate("createdBy" , "name role") 
     .lean() 
     // console.log(data)
     res.json(data)
     
      
 })
-app.post('/login' , async (req, res)=>{
+app.post('/login' ,  async (req, res)=>{
 
 
-    const {gmail} = req.body   // de structuring gmail from (body)
+    const {gmail,name , expectedRole} = req.body   // de structuring gmail from (body)
+    console.log(expectedRole)
 
-    const user = await User.findOne({ gmail });
+    const user = await User.findOne({ gmail , name });
     if(!user){ return res.status(300).json("no user found")}
+
+    
+    if(expectedRole && user.role !== expectedRole){
+        return res.status(400).json({ msg : `invalid auth ${expectedRole} cannot login here`})
+    }
+        const token = await jwt.sign( { "userid" : user._id , "role": user.role } , process.env.SECRET_KEY , {expiresIn : '1h'})
+        res.cookie("token" , token , {maxAge: 60 * 60 * 1000, httpOnly:true , sameSite : 'lax' , secure : false}).status(200).json({msg : "login successfull" ,
+            "userId" : user._id,
+            "username" : user.name,
+            "role" : user.role
+        })
+    
+    
  
         // console.log(user._id);
         
-    const token = await jwt.sign( { "userid" : user._id } , process.env.SECRET_KEY , {expiresIn : '1h'})
-        res.cookie("token" , token , {maxAge: 60 * 60 * 1000, httpOnly:true , sameSite : 'lax' , secure : false}).status(200).json({msg : "login succefull" ,
-            "userId" : user._id,
-            "username" : user.name
-        })
     
-    console.log(gmail)
+    
+    // console.log(gmail)
 
 
     
@@ -132,7 +143,7 @@ app.get('/post/:id' , async (req, res)=>{
     const id = req.params.id 
     try{
         const response = await PostSchema.Post.findById(id)
-        .populate("createdBy" , "name")
+        .populate("createdBy" , "name role")
         .lean()
         res.json(response)
     }catch(err){
@@ -148,6 +159,33 @@ app.get('/logout' , (req , res)=>{
     res.cookie("token" , "none" ,{maxAge : 50000 , httpOnly:true}).json("cookie deleted success !!").status(200)
 })
 
+
+app.get('/wardenHome' , auth , RoleAuth , (req,res)=>{
+    res.send("hello this is warden access!!")
+})
+
+app.patch("/warden/updateStatus/post/:id" , auth , RoleAuth,  async (req,res)=>{
+    const id = req.params.id 
+    const {status} = req.body
+
+    try{
+    const allowed = ["Seen" , "Done" ,"Pending"]
+    if(!allowed.includes(status)){
+       return res.status(400).json("invalid status")
+    }
+
+    const post = await PostSchema.Post.findByIdAndUpdate(id , {status } , {new : true} )
+
+    if(!post){
+         return res.status(400).json("post not found")
+    }
+
+        return res.json({ msg : "status updated successfully" , post})
+
+    }catch(err){
+        res.status(500).json({"err": err.message})
+}
+})
  
 
 app.listen(process.env.PORT ,()=>{

@@ -61,7 +61,7 @@ function Navabr() {
       >
         <div className="container-fluid">
           <Link className="navbar-brand fw-bold text-white" to="/">
-            SomeOneInMarket
+            What's the Problem
           </Link>
 
           <button

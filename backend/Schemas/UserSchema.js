@@ -13,6 +13,12 @@ const userSchema = new mongoose.Schema({
   gmail:{
     type : String,
     required : true 
+  },
+  role:{
+    type: String ,
+    enum : ["student" , "warden"] ,
+    required : true 
+    
   }
 
 

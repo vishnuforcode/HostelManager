@@ -12,7 +12,7 @@ function Login() {
   const successToastRef = useRef(null)
   const errorToastRef = useRef(null)
 
-  const [formData, setFormData] = useState({ name: "", gmail: "" })
+  const [formData, setFormData] = useState({ name: "", gmail: "" , expectedRole : "student"})
 
   const handleChange = (e) => {
     const { name, value } = e.target
