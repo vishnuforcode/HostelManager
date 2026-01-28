@@ -2,6 +2,8 @@ import jwt from 'jsonwebtoken'
 
 const auth = (req,res ,next) =>{
     const token = req.cookies.token ;
+   //  const token = req.headers.authorization
+    console.log(token)
      if(!token) { return res.status(401).json("not authenticated")}
 
      try{

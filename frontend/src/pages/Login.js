@@ -25,7 +25,7 @@ function Login() {
       const res = await axios.post(
         'https://hostelmanagerbackend.onrender.com/login',
         formData,
-        { withCredentials: true }
+      {withCredentials:true}
       )
 
       localStorage.setItem("currentAuth" , "true")

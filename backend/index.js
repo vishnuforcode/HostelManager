@@ -62,7 +62,8 @@ app.post('/login' ,  async (req, res)=>{
         return res.status(400).json({ msg : `invalid auth ${expectedRole} cannot login here`})
     }
         const token = await jwt.sign( { "userid" : user._id , "role": user.role } , process.env.SECRET_KEY , {expiresIn : '1h'})
-        res.cookie("token" , token , {maxAge: 60 * 60 * 1000, httpOnly:true , sameSite : 'lax' , secure : false}).status(200).json({msg : "login successfull" ,
+        res.cookie("token" , token , {maxAge: 60 * 60 * 1000, httpOnly:true , sameSite : 'none' , secure : true}).status(200).json({
+            msg : "login successfull" ,
             "userId" : user._id,
             "username" : user.name,
             "role" : user.role
@@ -156,7 +157,15 @@ app.get('/logout' , (req , res)=>{
     const token = req.cookies.token     
     console.log(token)
     
-    res.cookie("token" , "none" ,{maxAge : 50000 , httpOnly:true}).json("cookie deleted success !!").status(200)
+    res.clearCookie("token", {
+  httpOnly: true,
+  secure: true,
+  sameSite: "None"
+})
+
+res.status(200).json("logged out")
+
+    // res.cookie("token" , "none" ,{maxAge : 50000 , httpOnly:true}).json("cookie deleted success !!").status(200)
 })
 
 
