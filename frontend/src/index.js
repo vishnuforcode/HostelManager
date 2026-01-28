@@ -24,7 +24,7 @@ const router = createBrowserRouter(
       <Route path='/register' element={<Register/>}/>
       <Route path='/post' element={<CreatePost/>}/>
       <Route path=':id/request' element={<CreateRequest/>}/>
-      <Route path='/wardenHome' element={<WardenHme/>}/>
+     
     </Route>
   )
 )
