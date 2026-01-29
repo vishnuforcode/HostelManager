@@ -12,7 +12,7 @@ const cookieParser = require('cookie-parser')
 const { Request } = require('./Schemas/request.model')
 const { default: RoleAuth } = require('./Middleware/RoleAuth')
 
-
+const path = require('path')
 const app = express()
 
 app.use(express.json())
@@ -196,6 +196,15 @@ app.patch("/warden/updateStatus/post/:id" , auth , RoleAuth,  async (req,res)=>{
 }
 })
  
+
+
+// Serve frontend
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+// React Router fallback
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
+});
 
 app.listen(process.env.PORT ,()=>{
     console.log(`listening at ${process.env.PORT}`);
