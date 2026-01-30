@@ -14,6 +14,7 @@ import CreatePost from './pages/CreatePost';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import CreateRequest from './pages/CreateRequest';
+import NotFound from './pages/NotFound';
 
 
 const router = createBrowserRouter(
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
       <Route path='/register' element={<Register/>}/>
       <Route path='/post' element={<CreatePost/>}/>
       <Route path=':id/request' element={<CreateRequest/>}/>
+      <Route path='/*' element={<NotFound/>}/>
      
     </Route>
   )

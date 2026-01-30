@@ -23,7 +23,7 @@ function Home() {
 
           setTimeout(() => {
             navigate('/login')
-          }, 2500);
+          }, 1500);
           
           
         } else {

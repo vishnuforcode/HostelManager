@@ -202,9 +202,22 @@ app.patch("/warden/updateStatus/post/:id" , auth , RoleAuth,  async (req,res)=>{
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
 // React Router fallback
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
+
+
+
+
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../frontend/build", "index.html")
+  );
 });
+
+// wildcard route
+// app.get("/*" , (req, res) => {
+//   res.status(400).send("<h3>This page is not found </h3>")
+// });
 
 app.listen(process.env.PORT ,()=>{
     console.log(`listening at ${process.env.PORT}`);
