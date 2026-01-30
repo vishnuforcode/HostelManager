@@ -19,7 +19,7 @@ app.use(express.json())
 
 app.use(cookieParser())
 app.use(cors({
-    origin:['http://localhost:3000' ,"http://10.211.231.104:3000" ,"http://localhost:3001" , "https://studentfrontend-dpnz.onrender.com" ,"https://wardenfrontend.onrender.com" ] ,
+    origin:['http://localhost:3000' ,"http://10.211.231.104:3000" ,"http://localhost:3001" , "https://hostelmanager.onrender.com" ,"https://wardenfrontend.onrender.com" ] ,
     credentials : true
 }))
 
